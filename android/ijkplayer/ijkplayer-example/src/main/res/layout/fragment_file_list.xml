@@ -17,6 +17,27 @@
         android:visibility="gone"
         android:lines="1" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <EditText
+            android:id="@+id/input_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="rtmp://t1.sptesyun.com:61935/tel/"
+            android:layout_weight="0.8"
+            />
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="80dp"
+            android:layout_height="45dp"
+            android:text="确 定"
+            />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/file_list_view"
         android:layout_width="wrap_content"

@@ -22,11 +22,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +39,8 @@ import tv.danmaku.ijk.media.example.activities.VideoActivity;
 public class SampleMediaListFragment extends Fragment {
     private ListView mFileListView;
     private SampleMediaAdapter mAdapter;
+    private Button btnOk;
+    private EditText editText;
 
     public static SampleMediaListFragment newInstance() {
         SampleMediaListFragment f = new SampleMediaListFragment();
@@ -47,6 +52,19 @@ public class SampleMediaListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_file_list, container, false);
         mFileListView = (ListView) viewGroup.findViewById(R.id.file_list_view);
+        btnOk = (Button)viewGroup.findViewById(R.id.btn_ok);
+        editText = (EditText)viewGroup.findViewById(R.id.input_url);
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = "my url";
+                String url = editText.getText().toString();
+                VideoActivity.intentTo(getActivity(), url, name);
+                //Toast.makeText(SampleMediaListFragment.this.getActivity(),"has clicked:"+editText.getText().toString(),Toast.LENGTH_LONG);
+                Log.w("btnOK","has clicked:"+editText.getText().toString());
+            }
+        });
         return viewGroup;
     }
 
@@ -68,6 +86,9 @@ public class SampleMediaListFragment extends Fragment {
             }
         });
 
+        mAdapter.addItem("rtmp://10.100.1.4/live/12345", "spvideo 12345");
+        mAdapter.addItem("rtmp://58.200.131.2:1935/livetv/cctv1", "cctv1");
+        mAdapter.addItem("rtmp://58.200.131.2:1935/livetv/cctv13", "cctv13");
         mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8", "bipbop basic master playlist");
         mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear1/prog_index.m3u8", "bipbop basic 400x300 @ 232 kbps");
         mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear2/prog_index.m3u8", "bipbop basic 640x480 @ 650 kbps");
