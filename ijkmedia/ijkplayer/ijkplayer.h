@@ -223,4 +223,8 @@ void           *ijkmp_set_weak_thiz(IjkMediaPlayer *mp, void *weak_thiz);
 int             ijkmp_get_msg(IjkMediaPlayer *mp, AVMessage *msg, int block);
 void            ijkmp_set_frame_at_time(IjkMediaPlayer *mp, const char *path, int64_t start_time, int64_t end_time, int num, int definition);
 
+//For AEC
+bool ijkmp_get_aec_status(IjkMediaPlayer *mp);
+void ijkmp_set_aec_status(IjkMediaPlayer *mp, bool isOpened);
+
 #endif

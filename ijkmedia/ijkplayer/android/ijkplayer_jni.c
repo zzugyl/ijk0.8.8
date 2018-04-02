@@ -51,6 +51,10 @@
 
 static JavaVM* g_jvm;
 
+// for AEC
+#define AEC_CACHE_LEN 204800
+uint8_t pcm_arr[AEC_CACHE_LEN];
+
 typedef struct player_fields_t {
     pthread_mutex_t mutex;
     jclass clazz;
@@ -1128,7 +1132,86 @@ LABEL_RETURN:
 }
 
 
+static void
+IjkMediaPlayer_setApmStatus(JNIEnv *env, jobject thiz, jboolean isOpened)
+{
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    if (!mp)
+        return;
 
+    ijkmp_set_aec_status(mp, isOpened);
+
+    // if (isOpened)
+    //     ALOGE("Jeffer jni _setApmStatus true\n");
+    // else
+    //     ALOGE("Jeffer jni _setApmStatus false\n");
+}
+
+static jboolean
+IjkMediaPlayer_getApmStatus(JNIEnv *env, jobject thiz)
+{
+    // ALOGE("Jeffer jni _getApmStatus\n");
+
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    if (!mp)
+        return false;
+
+    return ijkmp_get_aec_status(mp);
+}
+
+static jint
+IjkMediaPlayer_getPcmData(JNIEnv *env, jobject thiz, jbyteArray jarr_pcm)
+{
+    jint ret = 0;
+    IjkMediaPlayer *mp = jni_get_media_player(env, thiz);
+    if (!mp)
+    {
+        ALOGE("Jeffer jni jni_get_media_player error\n");
+        ijkmp_set_aec_status(mp, false);
+        return ret;
+    }
+    jsize len = getApmCache((uint8_t*)pcm_arr);
+    if(0==len)
+    {
+        //ALOGE("Jeffer jni getApmCache == 0\n");
+        // ijkmp_set_aec_status(mp, false);
+        return ret;
+    }
+
+    jsize in_size = (*env)->GetArrayLength(env, jarr_pcm);
+    if (in_size < AEC_CACHE_LEN)
+    {
+        ALOGE("Jeffer jni input size < 204800\n");
+        ijkmp_set_aec_status(mp, false);
+        return ret;
+    }
+
+    // jshort * in_buffer = (*env)->GetShortArrayElements(env, jarr_pcm, NULL);
+    // if (!in_buffer)
+    // {
+    //     ijkmp_set_aec_status(mp, false);
+    //     return ret;
+    // }
+    // jshort * jpcm = (jshort*)pcm_arr;
+    // for (int i = 0; i < len; ++i)
+    // {
+    //     in_buffer[i] = jpcm[i];
+    // }
+    jbyte * in_buffer = (*env)->GetByteArrayElements(env, jarr_pcm, NULL);
+    if (!in_buffer)
+    {
+        ALOGE("Jeffer jni in_buffer is null\n");
+        ijkmp_set_aec_status(mp, false);
+        return ret;
+    }
+    // jbyte* jpcm = (jbyte*)pcm_arr;
+    memcpy(in_buffer,pcm_arr,len);
+    (*env)->ReleaseByteArrayElements(env,jarr_pcm,in_buffer,0);
+
+    ret = len;
+    // ALOGE("Jeffer jni _getPcmData done\n");
+    return ret;
+}
 
 
 // ----------------------------------------------------------------------------
@@ -1180,6 +1263,10 @@ static JNINativeMethod g_methods[] = {
 
     { "native_setLogLevel",     "(I)V",                     (void *) IjkMediaPlayer_native_setLogLevel },
     { "_setFrameAtTime",        "(Ljava/lang/String;JJII)V", (void *) IjkMediaPlayer_setFrameAtTime },
+
+    { "_setApmStatus",          "(Z)V",                     (void *) IjkMediaPlayer_setApmStatus },
+    { "_getApmStatus",          "()Z",                      (void *) IjkMediaPlayer_getApmStatus },
+    { "_getPcmData",            "([B)I",                    (void *) IjkMediaPlayer_getPcmData },
 };
 
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved)

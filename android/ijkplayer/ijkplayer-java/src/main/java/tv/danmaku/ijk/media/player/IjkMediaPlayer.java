@@ -680,6 +680,12 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     @Override
     public native long getDuration();
 
+    // FOR AEC
+    public native void _setApmStatus(boolean isOpened);
+    public native boolean _getApmStatus();
+    public native int _getPcmData(byte[] arrPcm);//arrPcm 输入 输出, 返回数组元素个数
+
+
     /**
      * Releases resources associated with this IjkMediaPlayer object. It is
      * considered good practice to call this method when you're done using the
