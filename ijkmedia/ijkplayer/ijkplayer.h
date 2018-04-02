@@ -29,6 +29,11 @@
 
 #include "ijkmeta.h"
 
+// add By Jeffer
+// close log
+#define NLOGD(...)
+#define MPTRACE NLOGD
+
 #ifndef MPTRACE
 #define MPTRACE ALOGD
 #endif

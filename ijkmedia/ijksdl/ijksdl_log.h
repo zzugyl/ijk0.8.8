@@ -43,12 +43,16 @@
 #define IJK_LOG_FATAL       ANDROID_LOG_FATAL
 #define IJK_LOG_SILENT      ANDROID_LOG_SILENT
 
+// modify By Jeffer
+// for close log
 #ifdef EXTRA_LOG_PRINT
 #define VLOG(level, TAG, ...)    ffp_log_extra_vprint(level, TAG, __VA_ARGS__)
-#define ALOG(level, TAG, ...)    ffp_log_extra_print(level, TAG, __VA_ARGS__)
+// #define ALOG(level, TAG, ...)    ffp_log_extra_print(level, TAG, __VA_ARGS__)
+#define ALOG(level, TAG, ...)
 #else
 #define VLOG(level, TAG, ...)    ((void)__android_log_vprint(level, TAG, __VA_ARGS__))
-#define ALOG(level, TAG, ...)    ((void)__android_log_print(level, TAG, __VA_ARGS__))
+// #define ALOG(level, TAG, ...)    ((void)__android_log_print(level, TAG, __VA_ARGS__))
+#define ALOG(level, TAG, ...)
 #endif
 
 #else
@@ -65,7 +69,8 @@
 #define IJK_LOG_SILENT      8
 
 #define VLOG(level, TAG, ...)    ((void)vprintf(__VA_ARGS__))
-#define ALOG(level, TAG, ...)    ((void)printf(__VA_ARGS__))
+// #define ALOG(level, TAG, ...)    ((void)printf(__VA_ARGS__))
+#define ALOG(level, TAG, ...)
 
 #endif
 
