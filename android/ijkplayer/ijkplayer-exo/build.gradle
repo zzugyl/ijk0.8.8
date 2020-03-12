@@ -23,18 +23,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.google.android.exoplayer:exoplayer:r1.5.11'
+    api 'com.google.android.exoplayer:exoplayer:r1.5.11'
 
-    compile project(':ijkplayer-java')
+    api project(':ijkplayer-java')
     // compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
 }
 
 gradle.startParameter.taskNames.each { task ->
-    def subProjectName = task;
+    def subProjectName = task
     if (task.startsWith(':'))
         subProjectName = task.split(":")[1]
     if (subProjectName.equals(project.name))
-        apply from: new File(rootProject.projectDir, "tools/gradle-on-demand.gradle");
+        apply from: new File(rootProject.projectDir, "tools/gradle-on-demand.gradle")
 }
