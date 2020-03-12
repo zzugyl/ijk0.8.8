@@ -169,6 +169,9 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
 
     private String mDataSource;
 
+    private int mTrackA = -1;
+    private int mTrackV = -1;
+
     /**
      * Default library loader
      * Load them by yourself, if your libraries are not installed at default place.
@@ -751,6 +754,24 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     }
 
     private native int _getLoopCount();
+
+    public void setAudioDisable(){
+        if (mTrackA<0) mTrackA = getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_AUDIO);
+        if (mTrackA >= 0) deselectTrack(mTrackA);
+    }
+
+    public void setAudioEnable(){
+        if (mTrackA >= 0 && getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_AUDIO) < 0) selectTrack(mTrackA);
+    }
+
+    public void setVideoDisable(){
+        if (mTrackV<0) mTrackV = getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_VIDEO);
+        if (mTrackV >= 0) deselectTrack(mTrackV);
+    }
+
+    public void setVideoEnable(){
+        if (mTrackV >= 0 && getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_VIDEO) < 0) selectTrack(mTrackV);
+    }
 
     public void setSpeed(float speed) {
         _setPropertyFloat(FFP_PROP_FLOAT_PLAYBACK_RATE, speed);
